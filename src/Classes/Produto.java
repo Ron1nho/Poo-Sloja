@@ -1,8 +1,13 @@
+package Classes;
+import java.time.LocalDate;
+
 public class Produto {
     
     private double preco;
     private int codigoP, Qtdestoque;
     private String nome;
+    
+    
 
 
     
@@ -28,6 +33,16 @@ public class Produto {
 
 
 
+   /* public String getProduto_buscado() {
+        return produto_buscado;
+    }
+
+    public void setProduto_buscado(String produto_buscado) {
+        this.produto_buscado = produto_buscado;
+    }
+        */
+    
+
     public double getpreco() {
         return preco;
     }
@@ -41,11 +56,12 @@ public class Produto {
         this.codigoP = codigoP;
     }
 
-    public int getQtdestoque() {
-        return Qtdestoque;
-    }
+  
 
-    public void setQtdestoque(int qtdestoque) {
+   
+    
+
+    public Produto(int qtdestoque) {
         Qtdestoque = qtdestoque;
     }
 
@@ -56,10 +72,29 @@ public class Produto {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public LocalDate getName() {
+        return null;
+    }
    
    
 
-   
+    @Override
+    public String toString() {
+        return "Produto { " + "nome = " + nome + ", preço = " + preco + "codigo=" +codigoP +"}";
+     }
+
+    public double getPreco() {
+        return preco;
+    }
+
+    public int getQtdestoque() {
+        return Qtdestoque;
+    }
+
+    public void setQtdestoque(int qtdestoque) {
+        Qtdestoque = qtdestoque;
+    };
 
 
 

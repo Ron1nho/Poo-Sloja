@@ -1,15 +1,18 @@
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import Classes.ComparadorData;
+import Classes.ComparadorPreco;
+import Classes.Produto;
+import Classes.Venda;
+
 public class AppProdutos {
-    public static void main(String[] args, Produto Q) throws InterruptedException, IOException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         int opcao; 
         Scanner in = new Scanner(System.in);
         ArrayList<Produto> produtos = new ArrayList<>();
@@ -40,9 +43,7 @@ public class AppProdutos {
                    } catch (InputMismatchException e) {
                     System.out.println("O código do produto devera ser apenas numeros!!!  ");
                    }
-
-                                    
-                    //1 Primeira verificação: Verificar se existe um produto com o codigo igual ao fornecido pelo usuario(Fazer uma busca). 
+     //1 Primeira verificação: Verificar se existe um produto com o codigo igual ao fornecido pelo usuario(Fazer uma busca). 
                    
                     boolean produto_existente = false;
 
@@ -59,12 +60,12 @@ public class AppProdutos {
 
                       //2 Segunda verificação: Verificar se o codigo digitado é inteiro (Tratar a excessão com try/cat) - ok 
 
-                
-                    
- //-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
          
                    System.out.println("Nome do produto: ");
                     p.setNome(in.nextLine());
+                    in.nextLine();
+
                     
 
 
@@ -115,79 +116,102 @@ public class AppProdutos {
                     }
 
                 
-              voltarMenu(in);
-            }else if (opcao == 2) {
-                
-                if (produtos.size() == 0){
-                    System.out.println("Não existem produtos a serem buscados.");
-                    voltarMenu(in);
-                    continue;
-                }
+              
+                } else if (opcao == 2) {
 
-                System.out.println("Digite o codigo do produto desejado: ");
-                int escolha = in.nextInt();
-                in.nextLine();
-
-                for (Produto produto : produtos) {
-                    if(escolha == produto.getCodigoP()){
-                        System.out.println("Produto encontrado - " + produto);
-                       // System.out.println(produto);
-                        voltarMenu(in);
+                    if (produtos.isEmpty()){
+                        System.out.println("Não existem produtos cadastrados no sistema. ");
+                    } else {
+    
+                    System.out.println("Digite o codigo do produto a ser buscado: ");
+                    int codigo = in.nextInt();
+    
+                    for (int i = 0; i < produtos.size(); i++) {
+                        if (produtos.get(i).getCodigoP() == codigo) {
+                            System.out.printf("\n---------------\n Nome: %\nProduto: %s \nCodigo: %d \nValor: %f \nQuantidade no estoque: %d \n---------------", produtos.get(i).getNome(), produtos.get(i).getCodigoP(), produtos.get(i).getPreco(), produtos.get(i).getQtdestoque());
+                        } 
                     }
                 }
-                //Retornar "Nenhum produto encontrado" caso a escolha seja nenhum codigo dos produtos cadastrados - ok
-               
-               
-               
-                voltarMenu(in);
-
+                    in.nextLine();
+    
+                    voltarMenu(in);
             
             } else if (opcao == 3) {
-                //Se a lista estiver vazia não há o que procurar.
 
-               /*  if (produtos.size() == 0) {
-                    System.out.println("Não existem produtos a serem listados.");
-                    voltarMenu(in);
-                    continue;
+                Double maior = Double.MIN_VALUE, medio = 0.0, menor = Double.MAX_VALUE;
+
+                for (int i = 0; i < produtos.size(); i++) {
+                
+                    if (produtos.get(i).getPreco() > maior) {
+                        maior = produtos.get(i).getPreco();
+                    }
+                    
+                    if (produtos.get(i).getPreco() < menor) {
+                        menor = produtos.get(i).getPreco();
+                    }
+
+                    medio = produtos.stream().collect(Collectors.averagingDouble(Produto::getPreco));
+
                 }
                 
- 
-                //Ordenar pelo nome: usando o metodo sort separado ou na stream
+                ComparadorPreco comparador = new ComparadorPreco(maior, medio, menor);
 
-                   private static void testSortOne(List<Produto> produtos) {		
-                    //Usando classe anonima
-                    Collections.sort(produtos, new Comparator<Produto>() {		
-                          public int compare(Produto p1, Produto p2) {
-                                return p1.getName().compareTo(p2.getName());
-                            
-                          }
-              });
+                if (produtos.isEmpty()){
+                    System.out.println("Não existem produtos cadastrados no sistema.");
+                } else {
+
+
+                System.out.println("\nProdutos:");
+                for (Produto p: produtos){
+                    System.out.printf("\n---------------\nProduto: %s \nCodigo: %d \nValor unitario: %f \nQuantidade no estoque: %d\n--------------- ", p.getNome(), p.getCodigoP(), p.getPreco(), p.getQtdestoque()); 
+                    
+                }
+
+                System.out.print(comparador.toString());
             }
-        
-        
-                        
-          
-          for (Produto produto : produtos) {		
-            System.out.println(produto.toString());
-          }*/
-          
-        
-        
-
-     /* private static void testSortTwo(List<Produto> produtos) {
-        produtos.stream()
-               .sorted((p1, p2) -> p1.getName().compareTo(p2.getName()))
-               .forEach(p -> System.out.println(p)); */
-
-  //Adequar a listagem ao anunciado da prova(Pode ser da quantidade em estoque ou do preço do produto)
-        
-            } else if (opcao == 4) {
+                voltarMenu(in);
                 
-            }
-             else if (opcao == 5){
-                //Primeira verificar se existem produtos na lista de produtos
-                //Pedir codigo do produto ao usuario
-                //Segunda verificar se o codigo fornecido pelo usuario está contido na lista de produtos
+            }  else if (opcao == 4) {
+                    if (vendas.isEmpty()) {
+                        System.out.println("\nNão existe nenhum produto cadastrado!");
+                    } else {
+                    
+                        Double maior = Double.MIN_VALUE, medio = 0.0, menor = Double.MAX_VALUE;
+                        for (int i = 0; i < vendas.size(); i++) {
+                    
+                            if (vendas.get(i).getValor() > maior) {
+                                maior = vendas.get(i).getValor();
+                            }
+                            
+                            if (vendas.get(i).getValor() < menor) {
+                                menor = vendas.get(i).getValor();
+                            }
+        
+                            medio = vendas.stream().collect(Collectors.averagingDouble(Venda::getValor));
+        
+                        }
+                        
+                        ComparadorPreco comparador = new ComparadorPreco(maior, medio, menor);
+    
+                        vendas.sort(new ComparadorData());
+                        String dia = vendas.get(0).getData();
+                        String mes = vendas.get(vendas.size() -1).getData();
+                        System.out.printf("\nVendas || %s - %s:" , dia, mes);
+                        
+                        for (Venda p : vendas){
+                            for (int i=0; i < produtos.size(); i++) {
+                                System.out.printf("\n--------------------\nData: %s\nProduto: %s - %d\nQuantidade obtida no estoque: %d\nValor unitario: %s\nValor Total: %s\n-------------------- ", p.getData(), produtos.get(i).getNome(), produtos.get(i).getCodigoP(),produtos.get(i).getQtdestoque(), produtos.get(i).getPreco(), p.getValorTotal());
+                            }
+                        }
+                                System.out.print(comparador.toString());
+                    }
+                        
+                             voltarMenu(in);   
+
+
+            
+            } else if (opcao == 5){
+                
                 Venda v = new Venda();
 
                 System.out.println ("Código do produto que está sendo vendido: ");
@@ -200,14 +224,7 @@ public class AppProdutos {
                 }else {
                     voltarMenu(in);
                         continue;
-                    
-                }
-
-                
-                //Pedir a quantidade a ser vendida
-                //Verificar se a quantidade é maior que 0
-                //verificar se a quantidade a ser vendida é menor que a quantidade em estoque do produto
-                //Fazer a baixa do estoque  
+                     }
                 
                 System.out.println("Digite data: ");
 
@@ -255,12 +272,7 @@ public class AppProdutos {
                 }
     
     
-
-    
-
-    
-
-    private static void voltarMenu(Scanner in) throws InterruptedException, IOException {
+private static void voltarMenu(Scanner in) throws InterruptedException, IOException {
         System.out.println("\nPressione ENTER para voltar ao menu.");
         in.nextLine();
 
@@ -279,10 +291,11 @@ public class AppProdutos {
         }
     }
 
-        return null;
-    }
+        return null; 
+}
 
 }
+
 
        
         
